@@ -164,10 +164,8 @@ export default function App() {
     setCustomers((prev) => prev.filter((_, i) => i !== index));
   }
 
-  // Tổng doanh thu
   const totalRevenue = customers.reduce((sum, c) => sum + c.total, 0);
 
-  // Nhóm khách hàng theo tên + tổng tiền
   const groupedCustomers = customers.reduce((acc, cur) => {
     if (!acc[cur.name]) acc[cur.name] = { total: 0, items: [] };
     acc[cur.name].total += cur.total;
@@ -177,7 +175,71 @@ export default function App() {
 
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const uniqueCustomerNames = [...new Set(customers.map(c => c.name))];
+  function handlePrintCustomer(customerName) {
+    const customerItems = customers.filter(c => c.name === customerName);
+    const printContent = `
+      <html>
+        <head>
+          <title>Danh sách mua hàng của ${customerName}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h2 { text-align: center; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #bbb; padding: 8px; text-align: center; }
+            th { background-color: #b0c4de; }
+            tfoot td { font-weight: bold; background-color: #ddd; }
+          </style>
+        </head>
+        <body>
+          <h2>Danh sách mua hàng của ${customerName}</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${customerItems
+                .map(
+                  (item) => `
+                <tr>
+                  <td>${item.product}</td>
+                  <td>${item.quantity}</td>
+                  <td>${item.total.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}</td>
+                </tr>
+              `
+                )
+                .join("")}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Tổng cộng:</td>
+                <td>${customerItems.reduce((sum, i) => sum + i.quantity, 0)}</td>
+                <td>${customerItems
+                  .reduce((sum, i) => sum + i.total, 0)
+                  .toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </body>
+      </html>
+    `;
 
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  }
 
   return (
     <div style={styles.container}>
@@ -287,6 +349,12 @@ export default function App() {
                 </button>{" "}
                 <button onClick={() => deleteCustomer(i)} style={styles.smallBtnDelete}>
                   Xóa
+                </button>
+                <button
+                  onClick={() => handlePrintCustomer(c.name)}
+                  style={{ ...styles.smallBtn, backgroundColor: "#28a745" }}
+                >
+                  In
                 </button>
               </li>
             ))}
