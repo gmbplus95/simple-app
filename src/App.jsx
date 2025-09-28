@@ -557,7 +557,7 @@ const styles = {
   container: {
     maxWidth: 1280,
     margin: "30px auto",
-    padding: 20,
+    padding: 25,
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     backgroundColor: "#f9faff",
     borderRadius: 10,
