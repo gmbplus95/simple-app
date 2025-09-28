@@ -175,8 +175,12 @@ export default function App() {
 
     const groupedProducts = customers.reduce((acc, cur) => {
     if (!acc[cur.product]) acc[cur.product] = { total: 0, price: 0 };
-    acc[cur.product].total += customers.filter(p => p.product == cur.product)[0].quantity;
-    acc[cur.product].price += products.filter(p => p.name == cur.product)[0].price * acc[cur.product].total;
+    const customerBoughtProduct = customers.filter(p => p.product == cur.product)
+    if (customerBoughtProduct.length > 0) {
+      acc[cur.product].total = customerBoughtProduct.reduce((acc, cur) => acc + cur.quantity, 0);
+      acc[cur.product].price = products.filter(p => p.name == cur.product)[0].price;
+      acc[cur.product].totalPrice = acc[cur.product].price * acc[cur.product].total;
+    }
     return acc;
   }, {});
 
@@ -204,6 +208,7 @@ export default function App() {
               <tr>
                 <th>Sản phẩm</th>
                 <th>Số lượng</th>
+                <th>Đơn giá</th>
                 <th>Thành tiền</th>
               </tr>
             </thead>
@@ -214,6 +219,12 @@ export default function App() {
                 <tr>
                   <td>${item.product}</td>
                   <td>${item.quantity}</td>
+                  <td>
+                    ${products.filter(i => i.name == item.product)[0].price.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </td>
                   <td>${item.total.toLocaleString("vi-VN", {
                     style: "currency",
                     currency: "VND",
@@ -226,7 +237,8 @@ export default function App() {
             <tfoot>
               <tr>
                 <td>Tổng cộng:</td>
-                <td>${customerItems.reduce((sum, i) => sum + i.quantity, 0)}</td>
+                <td></td>
+                <td></td>
                 <td>${customerItems
                   .reduce((sum, i) => sum + i.total, 0)
                   .toLocaleString("vi-VN", {
@@ -376,6 +388,7 @@ export default function App() {
                   <th style={styles.th}>Tên khách hàng</th>
                   <th style={styles.th}>Sản phẩm</th>
                   <th style={styles.th}>Số lượng</th>
+                  <th style={styles.th}>Đơn giá</th>
                   <th style={styles.th}>Thành tiền</th>
                 </tr>
               </thead>
@@ -395,6 +408,12 @@ export default function App() {
                         <td style={styles.td}>{item.product}</td>
                         <td style={styles.td}>{item.quantity}</td>
                         <td style={styles.td}>
+                          {products.filter(i => i.name == item.product)[0].price.toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </td>
+                        <td style={styles.td}>
                           {item.total.toLocaleString("vi-VN", {
                             style: "currency",
                             currency: "VND",
@@ -407,7 +426,8 @@ export default function App() {
                         Tổng cộng:
                       </td>
                       <td style={styles.td}>
-                        {data.items.reduce((sum, i) => sum + i.quantity, 0)}
+                      </td>
+                      <td style={styles.td}>
                       </td>
                       <td style={styles.td}>
                         {data.total.toLocaleString("vi-VN", {
@@ -425,7 +445,8 @@ export default function App() {
                     Tổng cộng tất cả khách:
                   </td>
                   <td style={styles.td}>
-                    {customers.reduce((sum, c) => sum + c.quantity, 0)}
+                  </td>
+                  <td style={styles.td}>
                   </td>
                   <td style={styles.td}>
                     {totalRevenue.toLocaleString("vi-VN", {
@@ -439,7 +460,7 @@ export default function App() {
           )}
 
           <h3 style={{ marginTop: 30 }}>Bảng tổng hợp theo sản phẩm</h3>
-          {groupedProducts.length === 0 ? (
+          {customers.length === 0 ? (
             <p>Chưa có dữ liệu tổng hợp</p>
           ) : (
             <table style={styles.table}>
@@ -447,6 +468,7 @@ export default function App() {
                 <tr>
                   <th style={styles.th}>Tên sản phẩm</th>
                   <th style={styles.th}>Số lượng</th>
+                  <th style={styles.th}>Đơn giá</th>
                   <th style={styles.th}>Thành tiền</th>
                 </tr>
               </thead>
@@ -462,6 +484,12 @@ export default function App() {
                         <td style={styles.td}>{data.total}</td>
                         <td style={styles.td}>
                           {data.price.toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </td>
+                        <td style={styles.td}>
+                          {data.totalPrice.toLocaleString("vi-VN", {
                             style: "currency",
                             currency: "VND",
                           })}
