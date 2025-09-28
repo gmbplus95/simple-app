@@ -173,6 +173,13 @@ export default function App() {
     return acc;
   }, {});
 
+    const groupedProducts = customers.reduce((acc, cur) => {
+    if (!acc[cur.product]) acc[cur.product] = { total: 0, price: 0 };
+    acc[cur.product].total += customers.filter(p => p.product == cur.product)[0].quantity;
+    acc[cur.product].price += products.filter(p => p.name == cur.product)[0].price * acc[cur.product].total;
+    return acc;
+  }, {});
+
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const uniqueCustomerNames = [...new Set(customers.map(c => c.name))];
   function handlePrintCustomer(customerName) {
@@ -314,8 +321,7 @@ export default function App() {
           <input
             style={styles.input}
             placeholder="Số lượng"
-            type="number"
-            min={1}
+            type="text"
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
           />
@@ -349,7 +355,7 @@ export default function App() {
                 </button>{" "}
                 <button onClick={() => deleteCustomer(i)} style={styles.smallBtnDelete}>
                   Xóa
-                </button>
+                </button>{" "}
                 <button
                   onClick={() => handlePrintCustomer(c.name)}
                   style={{ ...styles.smallBtn, backgroundColor: "#28a745" }}
@@ -360,7 +366,6 @@ export default function App() {
             ))}
           </ul>
 
-          {/* Bảng tổng hợp */}
           <h3 style={{ marginTop: 30 }}>Bảng tổng hợp theo khách hàng</h3>
           {customers.length === 0 ? (
             <p>Chưa có dữ liệu tổng hợp</p>
@@ -430,6 +435,41 @@ export default function App() {
                   </td>
                 </tr>
               </tfoot>
+            </table>
+          )}
+
+          <h3 style={{ marginTop: 30 }}>Bảng tổng hợp theo sản phẩm</h3>
+          {groupedProducts.length === 0 ? (
+            <p>Chưa có dữ liệu tổng hợp</p>
+          ) : (
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th style={styles.th}>Tên sản phẩm</th>
+                  <th style={styles.th}>Số lượng</th>
+                  <th style={styles.th}>Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(groupedProducts).map(([productName, data]) => (
+                  <React.Fragment key={productName}>
+                      <tr key={productName}>
+                          <td
+                            style={{ ...styles.td, fontWeight: "bold" }}
+                          >
+                            {productName}
+                          </td>
+                        <td style={styles.td}>{data.total}</td>
+                        <td style={styles.td}>
+                          {data.price.toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          })}
+                        </td>
+                      </tr>
+                  </React.Fragment>
+                ))}
+              </tbody>
             </table>
           )}
         </div>
