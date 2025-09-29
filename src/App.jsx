@@ -183,11 +183,10 @@ export default function App() {
     }
     return acc;
   }, {});
-
+  
   let totalGroupedProductsBox = 0
   let totalGroupedProductsNotBox = 0
   Object.keys(groupedProducts).forEach(e => {
-    debugger
     if (e.startsWith("Hộp")) {
       totalGroupedProductsBox += groupedProducts[e].total 
     } else {
@@ -198,7 +197,11 @@ export default function App() {
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const uniqueCustomerNames = [...new Set(customers.map(c => c.name))];
   function handlePrintCustomer(customerName) {
-    const customerItems = customers.filter(c => c.name === customerName);
+    const customerItems = customers.filter(c => c.name === customerName)
+    customerItems.sort((a, b) => {
+                    if (a.product.indexOf("nướng") !== -1) 
+                        return -1 
+                    else return a.product.localeCompare(b.product)});
     const printContent = `
       <html>
         <head>
@@ -484,7 +487,10 @@ export default function App() {
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(groupedProducts).sort((a, b) => a.productName - b.productName).map(([productName, data]) => (
+                {Object.entries(groupedProducts).sort((a, b) => {
+                    if (a[0].indexOf("nướng") !== -1) 
+                        return -1 
+                    else return a[0].localeCompare(b[0])}).map(([productName, data]) => (
                   <React.Fragment key={productName}>
                       <tr key={productName}>
                           <td
@@ -514,11 +520,7 @@ export default function App() {
                   <td style={styles.td}>
                     Số lượng bánh:
                   </td>
-                  <td style={styles.td}>
-                  </td>
-                  <td style={styles.td}>
-                  </td>
-                  <td style={styles.td}>
+                  <td colSpan={3} style={styles.td}>
                     {totalGroupedProductsNotBox}
                   </td>
                 </tr>
@@ -526,11 +528,7 @@ export default function App() {
                   <td style={styles.td}>
                     Số lượng hộp bánh:
                   </td>
-                  <td style={styles.td}>
-                  </td>
-                  <td style={styles.td}>
-                  </td>
-                  <td style={styles.td}>
+                  <td colSpan={3}  style={styles.td}>
                     {totalGroupedProductsBox}
                   </td>
                 </tr>
