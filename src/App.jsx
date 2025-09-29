@@ -173,7 +173,7 @@ export default function App() {
     return acc;
   }, {});
 
-    const groupedProducts = customers.reduce((acc, cur) => {
+  const groupedProducts = customers.reduce((acc, cur) => {
     if (!acc[cur.product]) acc[cur.product] = { total: 0, price: 0 };
     const customerBoughtProduct = customers.filter(p => p.product == cur.product)
     if (customerBoughtProduct.length > 0) {
@@ -183,6 +183,17 @@ export default function App() {
     }
     return acc;
   }, {});
+
+  let totalGroupedProductsBox = 0
+  let totalGroupedProductsNotBox = 0
+  Object.keys(groupedProducts).forEach(e => {
+    debugger
+    if (e.startsWith("Hộp")) {
+      totalGroupedProductsBox += groupedProducts[e].total 
+    } else {
+      totalGroupedProductsNotBox += groupedProducts[e].total 
+    }
+  })
 
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const uniqueCustomerNames = [...new Set(customers.map(c => c.name))];
@@ -473,7 +484,7 @@ export default function App() {
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(groupedProducts).map(([productName, data]) => (
+                {Object.entries(groupedProducts).sort((a, b) => a.productName - b.productName).map(([productName, data]) => (
                   <React.Fragment key={productName}>
                       <tr key={productName}>
                           <td
@@ -498,6 +509,32 @@ export default function App() {
                   </React.Fragment>
                 ))}
               </tbody>
+              <tfoot>
+                <tr style={{ fontWeight: "bold", backgroundColor: "#ddd" }}>
+                  <td style={styles.td}>
+                    Số lượng bánh:
+                  </td>
+                  <td style={styles.td}>
+                  </td>
+                  <td style={styles.td}>
+                  </td>
+                  <td style={styles.td}>
+                    {totalGroupedProductsNotBox}
+                  </td>
+                </tr>
+                <tr style={{ fontWeight: "bold", backgroundColor: "#ddd" }}>
+                  <td style={styles.td}>
+                    Số lượng hộp bánh:
+                  </td>
+                  <td style={styles.td}>
+                  </td>
+                  <td style={styles.td}>
+                  </td>
+                  <td style={styles.td}>
+                    {totalGroupedProductsBox}
+                  </td>
+                </tr>
+              </tfoot>
             </table>
           )}
         </div>
