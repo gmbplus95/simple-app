@@ -197,11 +197,7 @@ export default function App() {
   const [isNewCustomer, setIsNewCustomer] = useState(false);
   const uniqueCustomerNames = [...new Set(customers.map(c => c.name))];
   function handlePrintCustomer(customerName) {
-    const customerItems = customers.filter(c => c.name === customerName)
-    customerItems.sort((a, b) => {
-                    if (a.product.indexOf("nướng") !== -1) 
-                        return -1 
-                    else return a.product.localeCompare(b.product)});
+    const customerItems = customers.filter(c => c.name === customerName).sort((a,b) => a.product.localeCompare(b.product))
     const printContent = `
       <html>
         <head>
@@ -487,10 +483,7 @@ export default function App() {
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(groupedProducts).sort((a, b) => {
-                    if (a[0].indexOf("nướng") !== -1) 
-                        return -1 
-                    else return a[0].localeCompare(b[0])}).map(([productName, data]) => (
+                {Object.entries(groupedProducts).sort().map(([productName, data]) => (
                   <React.Fragment key={productName}>
                       <tr key={productName}>
                           <td
