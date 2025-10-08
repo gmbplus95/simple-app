@@ -1,29 +1,16 @@
 import React, { useState, useEffect } from "react";
 
 const initialProducts = [
-  { id: 1, name: "Bánh nướng 150 g - Thập cẩm", price: 60000 },
-  { id: 2, name: "Bánh nướng 150 g - Đậu xanh", price: 50000 },
-  { id: 3, name: "Bánh nướng 150 g - Khoai môn", price: 50000 },
-  { id: 4, name: "Bánh nướng 150 g - Trà xanh", price: 50000 },
-  { id: 5, name: "Bánh nướng 150 g - Mochi khoai môn", price: 55000 },
-  { id: 6, name: "Bánh nướng 150 g - Mochi chà bông", price: 55000 },
-  { id: 7, name: "Bánh nướng 150 g - Thập cẩm trứng", price: 65000 },
-  { id: 8, name: "Bánh nướng 150 g - Đậu xanh trứng", price: 55000 },
-  { id: 9, name: "Bánh nướng 150 g - Sen nhuyễn", price: 55000 },
-  { id: 10, name: "Bánh nướng 150 g - Khoai môn trứng", price: 55000 },
-
-  { id: 11, name: "Bánh dẻo 200 g - Thập cẩm", price: 60000 },
-  { id: 12, name: "Bánh dẻo 200 g - Đậu xanh", price: 55000 },
-  { id: 13, name: "Bánh dẻo 200 g - Khoai môn", price: 55000 },
-  { id: 14, name: "Bánh dẻo 200 g - Trà xanh", price: 55000 },
-  { id: 15, name: "Bánh dẻo 200 g - Thập cẩm trứng", price: 65000 },
-  { id: 16, name: "Bánh dẻo 200 g - Đậu xanh trứng", price: 55000 },
-  { id: 17, name: "Bánh dẻo 200 g - Khoai môn trứng", price: 55000 },
-
-  { id: 18, name: "Hộp 4 bánh - Hoa Sen", price: 50000 },
-  { id: 19, name: "Hộp 4 bánh - Con cò", price: 50000 },
-
-  { id: 20, name: "Hộp 2 bánh - Hoa Cúc trắng", price: 30000 },
+  { id: 31, name: "Bánh bao lứt 6 bánh", price: 80000 },
+  { id: 32, name: "Bánh bao cốm 6 bánh", price: 70000 },
+  { id: 33, name: "Bánh bao thịt trứng", price: 55000 },
+  { id: 34, name: "Bánh bao xúc xích phô mai", price: 60000 },
+  { id: 35, name: "Bánh bao gà nấm phô mai", price: 65000 },
+  { id: 36, name: "Bánh bao gà xá xíu phô mai", price: 70000 },
+  { id: 37, name: "Bánh bao xá xíu phô mai", price: 70000 },
+  { id: 38, name: "Bánh bao bò ngô phô mai", price: 70000 },
+  { id: 39, name: "Bánh bao lứt chay", price: 40000 },
+  { id: 40, name: "Bánh bao mix gà nấm và xá xíu phô mai", price: 40000 }
 ];
 
 export default function App() {
@@ -377,6 +364,14 @@ export default function App() {
                 </button>{" "}
                 <button onClick={() => deleteCustomer(i)} style={styles.smallBtnDelete}>
                   Xóa
+                </button>{" "}
+                <button onClick={() => {
+                  localStorage.removeItem("customers")
+                  setTimeout(function(){
+                    window.location.reload();
+                  });
+                  }} style={styles.smallBtnDelete}>
+                  Xóa hết
                 </button>{" "}
                 <button
                   onClick={() => handlePrintCustomer(c.name)}
