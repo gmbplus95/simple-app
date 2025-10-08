@@ -367,6 +367,7 @@ export default function App() {
                 </button>{" "}
                 <button onClick={() => {
                   localStorage.removeItem("customers")
+                  localStorage.removeItem("products")
                   setTimeout(function(){
                     window.location.reload();
                   });
